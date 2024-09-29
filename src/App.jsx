@@ -4,8 +4,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import { TranslationProvider } from "react-google-multi-lang";
-import CustomLanguageSwitcher from "./CustomLangSwitcher.js";
+
 import Login from "./Components/Login/Login.jsx";
 import SignUp from "./Components/SignUp/SignUp.jsx";
 import LearningCenter from "./Components/LearningCenter/LearningCenter.jsx";
@@ -14,6 +13,7 @@ import Finance from "./Components/Finance/Finance.jsx";
 import Pie from "./Components/Pie/Pie.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import Chat from "./Components/AI/Chat.jsx";
+import LanguageSwitcher from "./LanguageSwitcher/LanguageSwitcher.js";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
     element: (
       <div>
         <ProtectedRoute>
-          <CustomLanguageSwitcher />
+          <LanguageSwitcher />
           <Budgeting />
           <Pie />
           <Finance />
