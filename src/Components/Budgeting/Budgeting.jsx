@@ -225,8 +225,10 @@ function Budgeting() {
     <div>
       <div className="headerBanner">
         <img className="logo" src={logo} alt="" />
+        <div className="logoutButton" onClick={handleLogout}>
+          <LogoutIcon />
+        </div>
       </div>
-
       <div className="BudgetContainer">
         <div className="BudgetCard">
           <div className="BudgetContent">
