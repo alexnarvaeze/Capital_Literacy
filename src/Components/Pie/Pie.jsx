@@ -4,11 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./Pie.css";
-import { withTranslation } from "react-google-multi-lang";
+import { useTranslation } from "react-i18next";
 
 const ADDRESS = process.env.REACT_APP_CURR_ADDRESS;
 
 function Pie() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -58,7 +59,7 @@ function Pie() {
 
   return (
     <div className="PieContainer">
-      <p className="PieHeading">How's your spending?</p>
+      <p className="PieHeading">{t("PieTitle")}</p>
       <div className="PieContent">
         <PieChart
           series={[
@@ -67,32 +68,37 @@ function Pie() {
                 {
                   id: 0,
                   value: groceryExpenses,
-                  label: "Groceries",
+                  label: t("PieVal1"),
                   color: "#E3B505",
                 },
                 {
                   id: 1,
                   value: billsExpenses,
-                  label: "Bills & Utilities",
+                  label: t("PieVal2"),
                   color: "#004977",
                 },
                 {
                   id: 2,
                   value: subscriptionExpenses,
-                  label: "Subscriptions",
+                  label: t("PieVal3"),
                   color: "#C879FF",
                 },
-                { id: 3, value: gasExpenses, label: "Gas", color: "#44BBA4" },
+                {
+                  id: 3,
+                  value: gasExpenses,
+                  label: t("PieVal4"),
+                  color: "#44BBA4",
+                },
                 {
                   id: 4,
                   value: otherExpenses,
-                  label: "Other",
+                  label: t("PieVal5"),
                   color: "#FF6F61",
                 },
                 {
-                  id: 4,
+                  id: 5,
                   value: savings,
-                  label: "Savings",
+                  label: t("PieVal6"),
                   color: "#e0e8ac",
                 },
               ],
@@ -103,7 +109,7 @@ function Pie() {
           width={400}
           height={200}
         />
-        <p className="PieTitle">Spending Breakdown</p>
+        <p className="PieTitle">{t("PieFooter")}</p>
       </div>
     </div>
   );

@@ -10,48 +10,45 @@ import logo1 from "./charles-schwab.png";
 import logo2 from "./SAXO.png";
 import logo3 from "./etoro.png";
 import logo4 from "./exante.png";
-import { withTranslation } from "react-google-multi-lang";
+import { useTranslation } from "react-i18next";
 
 // Sample data for multiple cards
-const cardData = [
-  {
-    title: "Interactive Brokers",
-    image: logo,
-    description:
-      "Availability: Available to residents in Mexico, Brazil, and India.\nKey Features: Low fees, global market access, and sophisticated trading tools.\nMarkets: Access to U.S. and international exchanges, including stocks, options, futures, forex, and bonds.\nRegulations: IBKR adheres to local regulations in these countries.",
-    link: "https://www.interactivebrokers.com/en/home.php", // Add the URL here
-  },
-  {
-    title: "Charles Schwab International",
-    image: logo1, // You can replace this with a different image for the second card
-    description:
-      "Availability: Available to residents in Mexico and Brazil, but not available to residents of India.\nKey Features: No commission on U.S. stock trades, comprehensive customer support, and educational resources.\nMarkets: Primarily U.S. market access, but with limited international exchange options",
-    link: "https://international.schwab.com/", // Add the URL for card 2
-  },
-  {
-    title: "Saxo Bank",
-    image: logo2, // You can replace this with a different image for the third card
-    description:
-      "Availability: Available to residents of Mexico, Brazil, and India.\nKey Features: A full-service brokerage with global access to equities, forex, and bonds.\nMarkets: Access to over 40,000 financial instruments across global markets, including stocks, options, and CFDs.",
-    link: "https://www.home.saxo/", // Add the URL for card 3
-  },
-  {
-    title: "eToro",
-    image: logo3, // You can replace this with a different image for the third card
-    description:
-      "Availability: Available to residents in Mexico and Brazil, but not for residents of India.\nKey Features: Social trading, commission-free trading on stocks, and access to cryptocurrencies.\nMarkets: Primarily U.S. and European markets, along with crypto and commodities.",
-    link: "https://www.etoro.com/en-us/", // Add the URL for card 3
-  },
-  {
-    title: "Exante",
-    image: logo4, // You can replace this with a different image for the third card
-    description:
-      "Availability: Available to residents of Mexico, Brazil, and India.\nKey Features: Access to multiple global exchanges, with a focus on low-cost, multi-asset trading.\nMarkets: Over 50 global exchanges, including stocks, bonds, options, and futures.",
-    link: "https://exante.eu/", // Add the URL for card 3
-  },
-];
 
 function Finance() {
+  const { t } = useTranslation();
+  const cardData = [
+    {
+      title: "Interactive Brokers",
+      image: logo,
+      description: t("interactiveBrokersDescription"),
+      link: "https://www.interactivebrokers.com/en/home.php", // Add the URL here
+    },
+    {
+      title: "Charles Schwab International",
+      image: logo1, // You can replace this with a different image for the second card
+      description: t("charlesSchwabDescription"),
+      link: "https://international.schwab.com/", // Add the URL for card 2
+    },
+    {
+      title: "Saxo Bank",
+      image: logo2, // You can replace this with a different image for the third card
+      description: t("saxoBankDescription"),
+      link: "https://www.home.saxo/", // Add the URL for card 3
+    },
+    {
+      title: "eToro",
+      image: logo3, // You can replace this with a different image for the third card
+      description: t("eToroDescription"),
+      link: "https://www.etoro.com/en-us/", // Add the URL for card 3
+    },
+    {
+      title: "Exante",
+      image: logo4, // You can replace this with a different image for the third card
+      description: t("exanteDescription"),
+      link: "https://exante.eu/", // Add the URL for card 3
+    },
+  ];
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
@@ -108,7 +105,7 @@ function Finance() {
               textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", // Keep this if you want the text shadow
             }}
           >
-            Investment Corner
+            {t("investmentCorner")}
           </Typography>
 
           <CardMedia
@@ -166,7 +163,7 @@ function Finance() {
                 fontFamily: "Noto Sans",
               }}
             >
-              Previous
+              {t("previous")}
             </Button>
             <Button
               size="small"
@@ -178,7 +175,7 @@ function Finance() {
                 color: "white",
               }}
             >
-              Learn More
+              {t("learnMore")}
             </Button>
             <Button
               size="small"
@@ -190,7 +187,7 @@ function Finance() {
                 color: "white",
               }}
             >
-              Next
+              {t("next")}
             </Button>
           </CardActions>
         </Card>

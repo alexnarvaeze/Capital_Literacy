@@ -14,7 +14,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import logo from "../Capital_One_logo.png";
-import { withTranslation } from "react-google-multi-lang";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import IconButton from "@mui/material/IconButton";
@@ -22,10 +21,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useTranslation } from "react-i18next";
 
 const ADDRESS = process.env.REACT_APP_CURR_ADDRESS;
 
 function Budgeting() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -230,8 +231,10 @@ function Budgeting() {
         <div className="BudgetCard">
           <div className="BudgetContent">
             <div className="BudgetHeader">
-              <p style={{ fontWeight: "500" }}>Good Afternoon {userName},</p>
-              <p>September summary</p>
+              <p style={{ fontWeight: "500" }}>
+                {t("Greeting")} {userName},
+              </p>
+              <p>{t("BudgetTitle")}</p>
             </div>
             <div className="BudgetGauge">
               <Gauge
@@ -264,10 +267,10 @@ function Budgeting() {
             </div>
             <div className="ButtonSection">
               <div className="BudgetButton" onClick={handleManageBudgetOpen}>
-                Manage Budget
+                {t("ManageBudget")}
               </div>
               <div className="BudgetButton" onClick={handleManageExpenseOpen}>
-                Add Expense
+                {t("AddExpense")}
               </div>
             </div>
           </div>
@@ -283,7 +286,7 @@ function Budgeting() {
           }}
         >
           <DialogTitle>
-            Manage Budget
+            {t("ManageBudget")}
             <IconButton
               aria-label="close"
               onClick={handleManageBudgetClose}
@@ -323,7 +326,7 @@ function Budgeting() {
                 type="submit"
                 onClick={handleManageBudgetSubmit}
               >
-                Submit
+                {t("Submit")}
               </Button>
             </div>
           </DialogContent>
@@ -339,7 +342,7 @@ function Budgeting() {
           }}
         >
           <DialogTitle>
-            Add Expense
+            {t("Add Expense")}
             <IconButton
               aria-label="close"
               onClick={handleManageExpenseClose}
@@ -367,19 +370,21 @@ function Budgeting() {
                 }}
               />
               <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel htmlFor="demo-dialog-native">Category</InputLabel>
+                <InputLabel htmlFor="demo-dialog-native">
+                  {t("Category")}
+                </InputLabel>
                 <Select
                   native
                   value={newExpenseCategory}
                   onChange={(e) => setNewExpenseCategory(e.target.value)}
                 >
                   <option aria-label="None" value="" />
-                  <option value={"groceries"}>Groceries</option>
-                  <option value={"bills"}>Bills</option>
-                  <option value={"subscriptions"}>Subscriptions</option>
-                  <option value={"gas"}>Gas</option>
-                  <option value={"savings"}>Savings</option>
-                  <option value={"other"}>Other</option>
+                  <option value={"groceries"}>{t("PieVal1")}</option>
+                  <option value={"bills"}>{t("PieVal2")}</option>
+                  <option value={"subscriptions"}>{t("PieVal3")}</option>
+                  <option value={"gas"}>{t("PieVal4")}</option>
+                  <option value={"savings"}>{t("PieVal5")}</option>
+                  <option value={"other"}>{t("PieVal6")}</option>
                 </Select>
               </FormControl>
               <Button
@@ -395,7 +400,7 @@ function Budgeting() {
                 type="submit"
                 onClick={handleAddExpenseSubmit} // Use the new function here
               >
-                Submit
+                {t("Submit")}
               </Button>
             </div>
           </DialogContent>
@@ -405,4 +410,4 @@ function Budgeting() {
   );
 }
 
-export default withTranslation(Budgeting);
+export default Budgeting;

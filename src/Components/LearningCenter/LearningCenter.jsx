@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import "./LearningCenter.css";
-import { withTranslation } from "react-google-multi-lang";
+
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTranslation } from "react-i18next";
 
 // Import card data from the separate file
 import cardData from "./cardData";
 
 const LearningCenter = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
 
@@ -27,21 +29,21 @@ const LearningCenter = () => {
   return (
     <div className="wrapper">
       <div className="container">
-        <div className="title">Learning Center</div>
+        <div className="title">{t("LearningCenter")}</div>
         {cardData.map((card) => (
           <div
             key={card.id}
             className={`card card-${card.id}`}
             onClick={() => handleCardClick(card)}
           >
-            <div className="card-content">{card.title}</div>
+            <div className="card-content">{t(`cardTitle.${card.id}`)}</div>
           </div>
         ))}
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
           {selectedCard && (
             <>
               <DialogTitle>
-                {selectedCard.title}
+                {t(`cardTitle.${selectedCard.id}`)}
                 <IconButton
                   aria-label="close"
                   onClick={handleClose}
@@ -62,7 +64,7 @@ const LearningCenter = () => {
                     alt={selectedCard.title}
                     className="modal-image"
                   />
-                  <p>{selectedCard.description}</p>
+                  <p>{t(`cardDescription.${selectedCard.id}`)}</p>
                 </div>
               </DialogContent>
             </>
@@ -73,4 +75,4 @@ const LearningCenter = () => {
   );
 };
 
-export default withTranslation(LearningCenter);
+export default LearningCenter;
