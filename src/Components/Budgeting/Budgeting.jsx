@@ -15,6 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import logo from "../Capital_One_logo.png";
+import { withTranslation } from "react-google-multi-lang";
 
 function Budgeting() {
   const [open, setOpen] = React.useState(false);
@@ -38,65 +39,9 @@ function Budgeting() {
   return (
     <div>
       <div className="headerBanner">
-        <Button
-          className="transButton"
-          id="basic-button"
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClickOpen}
-        >
-          <div className="translateButton">
-            <TranslateIcon />
-          </div>
-        </Button>
-        <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-          <DialogTitle>Fill the form</DialogTitle>
-          <DialogContent>
-            <Box component="form" sx={{ display: "flex", flexWrap: "wrap" }}>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel htmlFor="demo-dialog-native">Language</InputLabel>
-                <Select
-                  native
-                  value={Language}
-                  onChange={handleChange}
-                  input={
-                    <OutlinedInput label="language" id="demo-dialog-native" />
-                  }
-                >
-                  <option aria-label="None" value="" />
-                  <option value={10}>Ten</option>
-                  <option value={20}>Twenty</option>
-                  <option value={30}>Thirty</option>
-                </Select>
-              </FormControl>
-              <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-dialog-select-label">Currency</InputLabel>
-                <Select
-                  labelId="demo-dialog-select-label"
-                  id="demo-dialog-select"
-                  value={Currency}
-                  onChange={handleChange}
-                  input={<OutlinedInput label="Currency" />}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Ok</Button>
-          </DialogActions>
-        </Dialog>
-        <img className="logo" src={logo} alt=""/>
+        <img className="logo" src={logo} alt="" />
       </div>
-  
+
       <div className="BudgetContainer">
         <div className="BudgetCard">
           <div className="BudgetContent">
@@ -125,11 +70,8 @@ function Budgeting() {
                   },
                   [`& .${gaugeClasses.valueArc}`]: {
                     fill: "#d03027",
-                    
                   },
-                  [`& .${gaugeClasses.referenceArc}`]: {
-
-                  },
+                  [`& .${gaugeClasses.referenceArc}`]: {},
                 }}
                 text={({ value, valueMax }) => `$${value}/${valueMax}`}
               />
@@ -146,4 +88,4 @@ function Budgeting() {
   );
 }
 
-export default Budgeting;
+export default withTranslation(Budgeting);

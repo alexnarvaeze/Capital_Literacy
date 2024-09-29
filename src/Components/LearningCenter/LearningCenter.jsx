@@ -1,5 +1,6 @@
 import React from "react";
 import "./LearningCenter.css";
+import { withTranslation } from "react-google-multi-lang";
 
 const LearningCenter = () => {
   return (
@@ -33,4 +34,4 @@ const LearningCenter = () => {
   );
 };
 
-export default LearningCenter;
+export default withTranslation(LearningCenter);

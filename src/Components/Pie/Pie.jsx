@@ -1,13 +1,12 @@
 import React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import "./Pie.css";
+import { withTranslation } from "react-google-multi-lang";
 
 function Pie() {
   return (
     <div className="PieContainer">
-      <p className="PieHeading">
-        How's your spending?
-      </p>
+      <p className="PieHeading">How's your spending?</p>
       <div className="PieContent">
         <PieChart
           series={[
