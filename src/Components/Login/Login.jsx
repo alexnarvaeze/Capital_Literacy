@@ -7,6 +7,8 @@ import logo from "../Capital_One_logo.png";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 
+const ADDRESS = process.env.REACT_APP_CURR_ADDRESS;
+
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -23,7 +25,7 @@ const Login = () => {
   const fetchUserData = async (token) => {
     try {
       const response = await axios.get(
-        "http://localhost:8004/api/auth/user-data",
+        `http://${ADDRESS}:8005/api/auth/user-data`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -33,6 +35,13 @@ const Login = () => {
         state: {
           name: response.data.name,
           budget: response.data.budget,
+          totalExpenses: response.data.totalExpenses,
+          groceryExpenses: response.data.groceryExpenses,
+          billsExpenses: response.data.billsExpenses,
+          subscriptionExpenses: response.data.subscriptionExpenses,
+          gasExpenses: response.data.gasExpenses,
+          otherExpenses: response.data.otherExpenses,
+          savings: response.data.savings,
         },
       });
     } catch (error) {
@@ -45,7 +54,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8004/api/auth/login",
+        `http://${ADDRESS}:8005/api/auth/login`,
         formData
       );
       if (response.data.message === "Login successful!") {

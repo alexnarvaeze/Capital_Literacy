@@ -18,7 +18,7 @@ function authenticateToken(req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, "temp");
         req.user = decoded; // Attach user info to the request object
         next(); // Proceed to the next middleware or route handler
     } catch (err) {
@@ -93,10 +93,10 @@ router.get('/user-data', (req, res) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, "temp");
         const userId = decoded.id;
 
-        const sql = `SELECT name, budget FROM users WHERE id = ?`;
+        const sql = `SELECT name, budget, totalExpenses, groceryExpenses, billsExpenses, subscriptionExpenses, gasExpenses, otherExpenses, savings FROM users WHERE id = ?`;
         db.get(sql, [userId], (err, row) => {
             if (err) {
                 return res.status(500).send({ error: err.message });
@@ -105,6 +105,13 @@ router.get('/user-data', (req, res) => {
                 res.json({
                     name: row.name,
                     budget: row.budget,
+                    totalExpenses: row.totalExpenses,
+                    groceryExpenses: row.groceryExpenses,
+                    billsExpenses: row.billsExpenses,
+                    subscriptionExpenses: row.subscriptionExpenses,
+                    gasExpenses: row.gasExpenses,
+                    otherExpenses: row.otherExpenses,
+                    savings: row.savings,
                 });
             } else {
                 res.status(404).send({ message: 'User not found' });
@@ -135,5 +142,62 @@ router.post('/update-budget', authenticateToken, (req, res) => {
     });
 });
 
+router.post('/add-expense', (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).send({ message: 'No token provided' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, "temp");
+        const userId = decoded.id;
+
+        const { amount, category } = req.body;
+        const expenseAmount = parseFloat(amount);
+
+        if (isNaN(expenseAmount) || expenseAmount <= 0) {
+            return res.status(400).send({ message: 'Invalid expense amount' });
+        }
+
+        let columnName;
+
+        // Determine which column to update
+        switch (category) {
+            case 'groceries':
+                columnName = 'groceryExpenses';
+                break;
+            case 'bills':
+                columnName = 'billsExpenses';
+                break;
+            case 'subscriptions':
+                columnName = 'subscriptionExpenses';
+                break;
+            case 'gas':
+                columnName = 'gasExpenses';
+                break;
+            case 'savings':
+                columnName = 'savings';
+                break;
+            case 'other':
+                columnName = 'otherExpenses';
+                break;
+            default:
+                return res.status(400).send({ message: 'Invalid category' });
+        }
+
+        // Update the respective column and also the totalExpenses
+        const sql = `UPDATE users SET ${columnName} = ${columnName} + ?, totalExpenses = totalExpenses + ? WHERE id = ?`;
+
+        db.run(sql, [expenseAmount, expenseAmount, userId], function (err) {
+            if (err) {
+                console.error("Error updating expenses:", err);
+                return res.status(500).send({ error: 'Failed to update expenses' });
+            }
+            res.send({ message: 'Expense added successfully' });
+        });
+    } catch (err) {
+        return res.status(401).send({ message: 'Invalid or expired token' });
+    }
+});
 
 module.exports = router;

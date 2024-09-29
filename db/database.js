@@ -26,7 +26,14 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
       password TEXT NOT NULL,
       budget INTEGER DEFAULT 0,
       language STRING DEFAULT 'en',
-      currency STRING DEFAULT 'usd'
+      currency STRING DEFAULT 'usd',
+      totalExpenses INTEGER DEFAULT 0,
+      groceryExpenses INTEGER DEFAULT 0,
+      billsExpenses INTEGER DEFAULT 0,
+      subscriptionExpenses INTEGER DEFAULT 0,
+      gasExpenses INTEGER DEFAULT 0,
+      otherExpenses INTEGER DEFAULT 0,
+      savings INTEGER DEFAULT 0
     )`, (err) => {
             if (err) {
                 console.log('Error when creating the users table:', err);

@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SignUp.css";
 
+const ADDRESS = process.env.REACT_APP_CURR_ADDRESS;
+
 const SignUp = () => {
   const [signupFail, setSignupFail] = useState("");
 
@@ -32,7 +34,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8004/api/auth/signup",
+        `http://${ADDRESS}:8005/api/auth/signup`,
         formData
       );
       if (response.data.token) {
