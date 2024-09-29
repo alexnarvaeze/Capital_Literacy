@@ -4,6 +4,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
+import { TranslationProvider } from "react-google-multi-lang";
+import CustomLanguageSwitcher from "./CustomLangSwitcher.js";
 import Login from "./Components/Login/Login.jsx";
 import SignUp from "./Components/SignUp/SignUp.jsx";
 import LearningCenter from "./Components/LearningCenter/LearningCenter.jsx";
@@ -39,6 +41,7 @@ const router = createBrowserRouter([
     element: (
       <div>
         <ProtectedRoute>
+          <CustomLanguageSwitcher />
           <Budgeting />
           <Pie />
           <Finance />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./LearningCenter.css";
+import { withTranslation } from "react-google-multi-lang";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -72,4 +73,4 @@ const LearningCenter = () => {
   );
 };
 
-export default LearningCenter;
+export default withTranslation(LearningCenter);

@@ -10,6 +10,7 @@ import logo1 from "./charles-schwab.png";
 import logo2 from "./SAXO.png";
 import logo3 from "./etoro.png";
 import logo4 from "./exante.png";
+import { withTranslation } from "react-google-multi-lang";
 
 // Sample data for multiple cards
 const cardData = [
