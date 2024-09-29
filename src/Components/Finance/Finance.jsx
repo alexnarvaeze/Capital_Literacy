@@ -69,7 +69,7 @@ function Finance() {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "5px" }}>
+    <div style={{ textAlign: "center", padding: "5px", marginTop: "50px" }}>
       <div
         style={{
           display: "flex",

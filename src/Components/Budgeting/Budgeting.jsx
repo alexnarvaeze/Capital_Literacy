@@ -23,19 +23,26 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 
+const ADDRESS = process.env.REACT_APP_CURR_ADDRESS;
+
 function Budgeting() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [open, setOpen] = React.useState(false);
   const [manageBudgetOpen, setManageBudgetOpen] = useState(false);
+  const [manageExpenseOpen, setManageExpenseOpen] = useState(false);
 
   const [Language, setLanguage] = React.useState("");
   const [Currency, setCurrency] = React.useState("");
 
   const [userName, setUserName] = useState("");
   const [budget, setBudget] = useState("");
-  const [newBudget, setNewBudget] = useState(""); // Step 1: State to track new budget input
+  const [newBudget, setNewBudget] = useState("");
+
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [newExpenseAmount, setNewExpenseAmount] = useState("");
+  const [newExpenseCategory, setNewExpenseCategory] = useState("");
 
   useEffect(() => {
     // Retrieve token from localStorage
@@ -44,7 +51,7 @@ function Budgeting() {
     // If token exists, fetch the latest budget from the backend
     if (token) {
       axios
-        .get("http://localhost:8004/api/auth/user-data", {
+        .get(`http://${ADDRESS}:8005/api/auth/user-data`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -52,6 +59,7 @@ function Budgeting() {
         .then((response) => {
           setUserName(response.data.name);
           setBudget(response.data.budget);
+          setTotalExpenses(response.data.totalExpenses);
         })
         .catch((error) => {
           console.error("Failed to fetch user data:", error);
@@ -64,6 +72,7 @@ function Budgeting() {
       // If no token, but location state exists, use it (e.g., user just logged in)
       setUserName(location.state.name);
       setBudget(location.state.budget);
+      setTotalExpenses(location.state.totalExpenses);
     } else {
       // If no state and no token, redirect to login
       navigate("/login");
@@ -100,13 +109,21 @@ function Budgeting() {
     setManageBudgetOpen(false);
   };
 
+  const handleManageExpenseOpen = () => {
+    setManageExpenseOpen(true);
+  };
+
+  const handleManageExpenseClose = () => {
+    setManageExpenseOpen(false);
+  };
+
   const handleManageBudgetSubmit = () => {
     setManageBudgetOpen(false);
     const token = localStorage.getItem("userToken");
 
     axios
       .post(
-        "http://localhost:8004/api/auth/update-budget",
+        `http://${ADDRESS}:8005/api/auth/update-budget`,
         {
           budget: parseInt(newBudget),
         },
@@ -131,10 +148,76 @@ function Budgeting() {
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
-
-    // Optionally, clear other user data or reset state as needed
-    // Redirect to login page
     navigate("/login");
+  };
+
+  const handleAddExpenseSubmit = () => {
+    setManageExpenseOpen(false);
+
+    // Convert the newExpenseAmount to a number
+    const expenseAmount = parseFloat(newExpenseAmount);
+
+    if (!isNaN(expenseAmount) && expenseAmount > 0) {
+      // Update the total expenses
+      setTotalExpenses((prevTotal) => parseFloat(prevTotal) + expenseAmount);
+
+      // Update the category-specific expenses based on the selected category
+      const token = localStorage.getItem("userToken");
+      axios
+        .post(
+          `http://${ADDRESS}:8005/api/auth/add-expense`,
+          {
+            amount: expenseAmount,
+            category: newExpenseCategory,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data.message);
+          fetchUserData(token);
+        })
+        .catch((error) => {
+          console.error("Failed to add expense:", error);
+          if (error.response && error.response.status === 401) {
+            alert("Session expired or invalid token. Please log in again.");
+            navigate("/login");
+          }
+        });
+    } else {
+      console.error("Invalid expense amount");
+    }
+    setNewExpenseAmount("");
+    setNewExpenseCategory("");
+  };
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axios.get(
+        `http://${ADDRESS}:8005/api/auth/user-data`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Fetched user data:", response.data);
+      navigate("/Home", {
+        state: {
+          name: response.data.name,
+          budget: response.data.budget,
+          totalExpenses: response.data.totalExpenses,
+          groceryExpenses: response.data.groceryExpenses,
+          billsExpenses: response.data.billsExpenses,
+          subscriptionExpenses: response.data.subscriptionExpenses,
+          gasExpenses: response.data.gasExpenses,
+          otherExpenses: response.data.otherExpenses,
+          savings: response.data.savings,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    }
   };
 
   return (
@@ -155,7 +238,7 @@ function Budgeting() {
                 className="test"
                 width={250}
                 height={170}
-                value={0}
+                value={totalExpenses}
                 valueMax={budget}
                 startAngle={-110}
                 endAngle={110}
@@ -182,6 +265,9 @@ function Budgeting() {
             <div className="ButtonSection">
               <div className="BudgetButton" onClick={handleManageBudgetOpen}>
                 Manage Budget
+              </div>
+              <div className="BudgetButton" onClick={handleManageExpenseOpen}>
+                Add Expense
               </div>
             </div>
           </div>
@@ -236,6 +322,78 @@ function Budgeting() {
                 variant="contained"
                 type="submit"
                 onClick={handleManageBudgetSubmit}
+              >
+                Submit
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={manageExpenseOpen}
+          onClose={handleManageExpenseClose}
+          PaperProps={{
+            sx: {
+              display: "flex",
+              flexDirection: "column",
+            },
+          }}
+        >
+          <DialogTitle>
+            Add Expense
+            <IconButton
+              aria-label="close"
+              onClick={handleManageExpenseClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <div className="amountInput">
+              <input
+                id="amount"
+                placeholder="New Expense Amount"
+                name="amount"
+                className="amountIn"
+                value={newExpenseAmount ? `$${newExpenseAmount}` : ""}
+                onChange={(e) => {
+                  const valueWithoutDollar = e.target.value.replace(/^\$/, "");
+                  setNewExpenseAmount(valueWithoutDollar);
+                }}
+              />
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel htmlFor="demo-dialog-native">Category</InputLabel>
+                <Select
+                  native
+                  value={newExpenseCategory}
+                  onChange={(e) => setNewExpenseCategory(e.target.value)}
+                >
+                  <option aria-label="None" value="" />
+                  <option value={"groceries"}>Groceries</option>
+                  <option value={"bills"}>Bills</option>
+                  <option value={"subscriptions"}>Subscriptions</option>
+                  <option value={"gas"}>Gas</option>
+                  <option value={"savings"}>Savings</option>
+                  <option value={"other"}>Other</option>
+                </Select>
+              </FormControl>
+              <Button
+                className="center-button"
+                sx={{
+                  backgroundColor: "rgb(71,140,209)",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "rgb(0,72,120)",
+                  },
+                }}
+                variant="contained"
+                type="submit"
+                onClick={handleAddExpenseSubmit} // Use the new function here
               >
                 Submit
               </Button>
