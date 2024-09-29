@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 
 // Import card data from the separate file
 import cardData from "./cardData";
+import { Button } from "@mui/material";
 
 const LearningCenter = () => {
   const { t } = useTranslation();
@@ -65,6 +66,15 @@ const LearningCenter = () => {
                     className="modal-image"
                   />
                   <p>{t(`cardDescription.${selectedCard.id}`)}</p>
+                  <Button>
+                    <a
+                      href={selectedCard.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {t("learnMore")}
+                    </a>
+                  </Button>
                 </div>
               </DialogContent>
             </>
